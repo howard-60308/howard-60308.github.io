@@ -30,143 +30,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
 
-        <!--  123 -->
-            <meta charset="gb2312">
-           <title>comment</title>
-           <style type="text/css">
-           *{margin:0; padding:0;}
-           body,input{font-size:14px; line-height:24px; color:#333; font-family:Microsoft yahei, Song, Arial, Helvetica, Tahoma, Geneva;}
-           h1{margin-bottom:15px; height:100px; line-height:100px; text-align:center; font-size:24px; color:#fff; background:black;}
-          #content #post,#comment p{zoom:1;}
-          #content #post:after,#comment p:after{display:block; height:0; clear:both; visibility:hidden; overflow:hidden; content:'.';}
-          .transition{-webkit-transition:all 0.5s linear; -moz-transition:all 0.5s linear; -o-transition:all 0.5s linear; -ms-transition:all 0.5s linear; transition:all 0.5s linear;}
-          #content{margin:0 auto; width:960px; overflow:hidden;}
-          #content #post{margin-bottom:15px; padding-bottom:15px; border-bottom:1px #d4d4d4 dashed;
-                   height: 556px;
-               }
-          #content #post textarea{display:block; margin-bottom:10px; padding:5px; width:948px; height:390px; border:1px #d1d1d1 solid; border-radius:5px; resize:none; outline:none;}
-          #content #post textarea:hover{border:1px #9bdf70 solid; background:#f0fbeb;}
-          #content #post #postBt,#content #post #clearBt{margin-left:5px; padding:3px; float:right;}
-          #comment{overflow:hidden;}
-          #comment p{margin-bottom:10px; padding:10px; border-radius:5px;}
-         #comment p:nth-child(odd){border:1px solid #e3e197; background:#ffd;}
-          #comment p:nth-child(even){border:1px solid #adcd3c; background:#f2fddb;}
-          /*#comment p span{display:inline; float:left;}*/
-          #comment p .right{text-align:right;}
-          #comment p .msg{width:738px;}
-          #comment p .datetime{width:200px; color:#999; text-align:right;}
-
-
-
-          </style>
-         <script type="text/javascript">
-             var named;
-             function delete1(id)
-             {
-                 localStorage.removeItem(id);
-                 this.Storage.writeData();
-             }
-             function prom() {
-
-                 var name = prompt("Enter your name", "");//將輸入的內容賦給變量 name ，
-                 named = name;
-                 //這里需要注意的是，prompt有兩個參數，前面是提示的話，后面是當對話框出來后，在對話框里的默認值
-
-                 if (named)//如果返回的有內容
-
-                 {
-
-                     alert("Welcome：" + name)
-                     document.getElementById("shangtian").style.display = "none";
-                     document.getElementById("ritian").value = named;
-
-                 }
-                 else {
-                     document.getElementById("ritian").value = "anonymous comment";
-                 }
-
-             }
-          var Storage =
-          {
-              saveData:function()//保存數據
-              {
-    
-                      var data = document.querySelector("#post textarea");
-                  if(data.value != "")
-                  {
-                      var time = new Date().getTime() + Math.random() * 5;//getTime是Date對象中的方法，作用是返回 1970年01月01日至今的毫秒數
-                      if (named) {
-                          localStorage.setItem(time, data.value + "|" + named + "|" + this.getDateTime());//將毫秒數存入Key值中，可以降低Key值重復率
-                      }
-                      else
-                      {
-                          localStorage.setItem(time, data.value + "|" + "anonymous comment" + "|" + this.getDateTime());//將毫秒數存入Key值中，可以降低Key值重復率
-                      }
-
-                      data.value = "";
-                      this.writeData();
-                  }
-                  else
-                  {
-                      alert("leave your message！");
-                 }
-              },
-              writeData:function()//輸出數據
-              {
-                 var dataHtml = "", data = "";
-                  for(var i = localStorage.length-1; i >= 0; i--)//效率更高的循環方法
-                  {
-                      data = localStorage.getItem(localStorage.key(i)).split("|");
- 
-                          //dataHtml += "<p><span class=\"msg\">" + data[0] + "</span><span class=\"datetime\">" + data[1] + "</span><span>" + data[2]+"</span></p>";
-                      dataHtml += "<span style=>" + data[1] + "<span style=\"float:right\">" + data[2] + "</span><p><span class=\"msg\">" + data[0] + "<input style=\"float:right;border:none;border-radius:5px;\" id=\"clearBt\" type=\"button\" onclick=\"delete1(" + localStorage.key(i) + ");\" value=\"刪除\"/>" + "</span></p>";
-                  }
-                  document.getElementById("comment").innerHTML = dataHtml;
-              },
-              clearData:function()//清空數據
-              {
-                  if(localStorage.length > 0)
-                  {
-                      if(window.confirm("make sure you want to clear this page"))
-                      {
-                          localStorage.clear();
-                          this.writeData();
-                      }
-                  }
-                  else
-                 {
-                     alert("nothing can be cleared！");
-                  }
-              },
-              getDateTime:function()//獲取日期時間，例如 2012-03-08 12:58:58
-              {
-                  var isZero = function(num)//私有方法，自動補零
-                  {
-                      if(num < 10)
-                     {
-                          num = "0" + num;
-                      }
-                      return num;
-                  }
-                  
-                  var d = new Date();
-                  return d.getFullYear() + "-" + isZero(d.getMonth() + 1) + "-" + isZero(d.getDate()) + " " + isZero(d.getHours()) + ":" + isZero(d.getMinutes()) + ":" + isZero(d.getSeconds());
-              }            
-          }
-          
-          window.onload = function()
-          {
-              Storage.writeData();//當打開頁面的時候，先將localStorage中的數據輸出一邊，如果沒有數據，則輸出空
-              document.getElementById("postBt").onclick = function(){Storage.saveData();}//發表評論按鈕添加點擊事件，作用是將localStorage中的數據輸出
-              document.getElementById("clearBt").onclick = function(){Storage.clearData();}//清空所有已保存的數據
-          }
-
-
-
-
-
-          </script>
-        <!-- 123  -->
+        
 
 
 
@@ -248,25 +112,10 @@
         </header> <!-- end s-header -->
 
 
-            <br>
-            <br>
-          <div id="content">
-              <div id="post">
-                  <div style="background:#3EADC5 ;height:30px;">
-                      Nickname:<input type="submit" id="shangtian" name="Submit3" style="border:none; background-color:#3EADC5; color:white;" value="clicktochange" onclick="prom()" />
-                      <input type="text" id="ritian" style="border:none; background-color:#3EADC5; color:white;"   onclick="prom()"/>
-                      <!--disabled="disabled"-->
-                  </div>
-                  <div>
-                  <textarea class="transition"></textarea>
-                      </div>
-                  <input id="postBt" type="button" style="border:none; background-color:#3EADC5; color:white;border-radius:5px; width:80px; height:50px;" value="sent"/>
-                 <input id="clearBt" type="button" style="border:none; background-color:#3EADC5; color:white;border-radius:5px; width:80px; height:50px;" value="clear"/>
-             </div>
-             <div id="comment"></div>
-              </div>
-
-        <br>
+            
+        <p>
+            oops
+        </p>
         
         <!-- footer
         ================================================== -->
