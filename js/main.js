@@ -95,7 +95,7 @@
         });
 
         searchWrap.on('click',  function(e) {
-            if( !$(e.target).is('.search-field') ) {
+            if( !$(e.target).is('.header__search-field') ) {
                 closeSearch.trigger('click');
             }
         });
